@@ -13,7 +13,16 @@ LIBC_SRCS	:=	$(addprefix lib/libc/,		\
 			memcpy.c			\
 			memmove.c			\
 			memrchr.c			\
-			printf.c			\
+			printf_bl31.c			\
+			AdvancedLoggerLib/AdvancedLoggerCommon.c			\
+			AdvancedLoggerLib/AdvancedLoggerLib.c			\
+			SynchronizationLib/Synchronization.c			\
+			SynchronizationLib/AsmSynchronization.S			\
+			TimerLib/ArmArchTimerLib.c			\
+			TimerLib/AArch64ArchTimerSupport.S			\
+			BaseLib/CpuPause.S			\
+			BaseLib/Math64.c			\
+			printf_int.c			\
 			putchar.c			\
 			puts.c				\
 			snprintf.c			\
@@ -42,3 +51,4 @@ endif
 
 INCLUDES	+=	-Iinclude/lib/libc		\
 			-Iinclude/lib/libc/$(ARCH)	\
+			-Ilib/libc
