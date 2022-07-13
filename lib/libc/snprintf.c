@@ -91,9 +91,9 @@ static void unsigned_num_print(char **s, size_t n, size_t *chars_printed,
  * %p - pointer format
  *
  * The following length specifiers are supported by this print
- * %l - long int
- * %ll - long long int
- * %z - size_t sized integer formats
+ * %l - long int (64-bit on AArch64)
+ * %ll - long long int (64-bit on AArch64)
+ * %z - size_t sized integer formats (64 bit on AArch64)
  *
  * The following padding specifiers are supported by this print
  * %0NN - Left-pad the number with 0s (NN is a decimal number)
