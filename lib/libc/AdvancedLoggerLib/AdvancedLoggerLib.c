@@ -9,8 +9,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-// TBD: This should not be here!!!
-#include <pisoc_base_platform_def.h>
+#include <platform_def.h>
 
 #include "../UefiBaseTypes.h"
 #include "AdvancedLoggerInternal.h"

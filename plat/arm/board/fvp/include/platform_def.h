@@ -91,6 +91,18 @@
 					FVP_DTB_DRAM_MAP_SIZE,		\
 					MT_MEMORY | MT_RO | MT_NS)
 
+/*
+ * Advanced Logger Buffer (CRB): Memmory allocated to store serial prints
+ * for advanced logger.
+ */
+#define ADV_LOGGER_BASE	(FVP_DTB_DRAM_MAP_START + \
+						 FVP_DTB_DRAM_MAP_SIZE)
+#define ADV_LOGGER_SIZE	ULL(0x400000)
+#define ADV_LOGGER_MMAP	MAP_REGION_FLAT(  \
+							ADV_LOGGER_BASE, \
+							ADV_LOGGER_SIZE, \
+							(MT_RW | MT_NS | MT_USER | MT_DEVICE))
+
 #if SPMC_AT_EL3
 /*
  * Number of Secure Partitions supported.

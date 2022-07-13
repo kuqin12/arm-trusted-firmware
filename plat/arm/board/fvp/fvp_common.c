@@ -169,6 +169,7 @@ const mmap_region_t plat_arm_mmap[] = {
 	ARM_V2M_MAP_MEM_PROTECT,
 #if SPM_MM
 	ARM_SPM_BUF_EL3_MMAP,
+  ADV_LOGGER_MMAP,
 #endif
 #if ENABLE_RME
 	ARM_MAP_GPT_L1_DRAM,
@@ -187,6 +188,7 @@ const mmap_region_t plat_arm_secure_partition_mmap[] = {
 	ARM_SP_IMAGE_NS_BUF_MMAP,
 	ARM_SP_IMAGE_RW_MMAP,
 	ARM_SPM_BUF_EL0_MMAP,
+  ADV_LOGGER_MMAP,
 	{0}
 };
 #endif
