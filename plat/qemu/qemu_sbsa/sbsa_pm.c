@@ -155,13 +155,13 @@ static void qemu_pwr_domain_off(const psci_power_state_t *target_state)
 	qemu_pwr_gic_off();
 }
 
-void __dead2 plat_secondary_cold_boot_setup(void);
+void __dead2 plat_secondary_warmboot_setup(void);
 
 static void __dead2
 qemu_pwr_domain_pwr_down_wfi(const psci_power_state_t *target_state)
 {
 	disable_mmu_el3();
-	plat_secondary_cold_boot_setup();
+	plat_secondary_warmboot_setup();
 }
 
 /*******************************************************************************
@@ -193,7 +193,7 @@ void qemu_pwr_domain_on_finish(const psci_power_state_t *target_state)
  ******************************************************************************/
 void qemu_pwr_domain_suspend_finish(const psci_power_state_t *target_state)
 {
-	assert(false);
+	// assert(false);
 }
 
 /*******************************************************************************
