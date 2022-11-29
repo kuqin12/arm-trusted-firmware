@@ -17,7 +17,6 @@
 	.globl	plat_crash_console_putc
 	.globl	plat_crash_console_flush
 	.globl  plat_secondary_cold_boot_setup
-	.globl  plat_secondary_warmboot_setup
 	.globl  plat_get_my_entrypoint
 	.globl  plat_is_my_cpu_primary
 
@@ -85,40 +84,6 @@ poll_mailbox:
 	wfe
 	b	poll_mailbox
 endfunc plat_secondary_cold_boot_setup
-
-	/* -----------------------------------------------------
-	 * void plat_secondary_warmboot_setup (void);
-	 *
-	 * This function performs any platform specific actions
-	 * needed for a secondary cpu after a cold reset e.g
-	 * mark the cpu's presence, mechanism to place it in a
-	 * holding pen etc.
-	 * -----------------------------------------------------
-	 */
-func plat_secondary_warmboot_setup
-	/* Calculate address of our hold entry */
-	bl	plat_my_core_pos
-	lsl	x0, x0, #PLAT_QEMU_HOLD_ENTRY_SHIFT
-	mov_imm	x2, PLAT_QEMU_HOLD_BASE
-
-	/* Wait until we have an interrupt */
-	dsb	sy
-	wfi
-
-	ldr	x1, [x2, x0]
-
-	/* Clear the mailbox again ready for next time. */
-	mov x1, #PLAT_QEMU_HOLD_STATE_WAIT
-	str x1, [x2, x0]
-
-	/* Jump to the provided entrypoint. */
-	mov_imm	x0, PLAT_QEMU_TRUSTED_MAILBOX_BASE
-	ldr	x1, [x0]
-	br	x1
-
-	/* Once we are awake, fall back to the cold boot setup function and do not return. */
-	b	plat_secondary_cold_boot_setup
-endfunc plat_secondary_warmboot_setup
 
 func plat_get_my_entrypoint
 	/* TODO support warm boot */
