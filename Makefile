@@ -1707,7 +1707,7 @@ ifdef UNIX_MK
 else
 # Clear the MAKEFLAGS as we do not want
 # to pass the gnumake flags to nmake.
-	${Q}set MAKEFLAGS='' && set && ${MSVC_NMAKE} /nologo /f ${FIPTOOLPATH}/Makefile.msvc FIPTOOLPATH=$(subst /,\,$(FIPTOOLPATH)) FIPTOOL=$(subst /,\,$(FIPTOOL)) /W /D /U
+	${Q}set "MAKEFLAGS=" && set && ${MSVC_NMAKE} /nologo /f ${FIPTOOLPATH}/Makefile.msvc FIPTOOLPATH=$(subst /,\,$(FIPTOOLPATH)) FIPTOOL=$(subst /,\,$(FIPTOOL)) /W /D /U
 endif #(UNIX_MK)
 
 romlib.bin: libraries FORCE
