@@ -24,10 +24,10 @@ ifndef BUILD_ENV_MK
     ENV_FILE_TO_INCLUDE := unix.mk
     ifdef OSTYPE
         ifneq ($(findstring ${OSTYPE}, cygwin),)
-            ENV_FILE_TO_INCLUDE := cygwin.mk
+            $(error "0")
         else
             ifneq ($(findstring ${OSTYPE}, MINGW32 mingw msys),)
-                ENV_FILE_TO_INCLUDE := msys.mk
+                $(error "1")
             endif
         endif
     else
@@ -37,16 +37,17 @@ ifndef BUILD_ENV_MK
             # We use MSYSTEM as an alternative, as that is seen by make
             ifneq ($(findstring ${MSYSTEM}, MINGW32 mingw msys),)
                 OSTYPE ?= msys
-                ENV_FILE_TO_INCLUDE := msys.mk
+                $(error "2")
             endif
         else
             ifdef OS
                 ifneq ($(findstring ${OS}, Windows_NT),)
-                    ENV_FILE_TO_INCLUDE := windows.mk
+                    $(error "3")
                 endif
             endif
         endif
     endif
+    $(error "${ENV_FILE_TO_INCLUDE}")
     include ${MAKE_HELPERS_DIRECTORY}${ENV_FILE_TO_INCLUDE}
     ENV_FILE_TO_INCLUDE :=
 
