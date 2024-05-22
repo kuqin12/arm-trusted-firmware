@@ -301,7 +301,8 @@ $(eval DEP := $(patsubst %.o,%.d,$(OBJ)))
 $(eval LIB := $(call uppercase, $(notdir $(1))))
 
 $(OBJ): $(2) $(filter-out %.d,$(MAKEFILE_LIST)) | lib$(3)_dirs
-	$$(ECHO) "  C1      $$($(LIB)_CFLAGS)"
+	$$(ECHO) "  C0      $(LIB)_CFLAGS"
+    $$(ECHO) "  C1      $$($(LIB)_CFLAGS)"
     $$(ECHO) "  C2      $$(TF_CFLAGS)"
     $$(ECHO) "  C3      $$(CFLAGS)"
     $$(ECHO) "  C4      $(MAKE_DEP)"
