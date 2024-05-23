@@ -301,7 +301,7 @@ $(eval DEP := $(patsubst %.o,%.d,$(OBJ)))
 $(eval LIB := $(call uppercase, $(notdir $(1))))
 
 $(OBJ): $(2) $(filter-out %.d,$(MAKEFILE_LIST)) | lib$(3)_dirs
-	$$(ECHO) "  PP      $$PATH"
+	$$(ECHO) "  PP      $$(PATH)"
 	$$(ECHO) "  CC      $$(CC)"
 	$$(ECHO) "  C0      $(LIB)"
 	$$(ECHO) "  C1      $$($(LIB)_CFLAGS)"
