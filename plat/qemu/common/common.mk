@@ -152,4 +152,12 @@ PLAT_BL_COMMON_SOURCES	+=	plat/arm/common/aarch64/arm_pauth.c
 CTX_INCLUDE_PAUTH_REGS	:=	1
 endif
 
+ifeq (${TRANSFER_LIST},1)
+include lib/transfer_list/transfer_list.mk
+endif
+
+ifeq (${PHIT_HOB}, 1)
+include lib/hob/hob.mk
+endif
+
 endif
