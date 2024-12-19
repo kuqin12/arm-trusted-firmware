@@ -108,7 +108,7 @@
 
   memory@8 {
     device_type = "device-memory"; /* Internal CRB */
-    reg = <0x00000100 0x00200000 0x0 0x00010000>;
+    reg = <0x00000100 0x00010000 0x0 0x00010000>;
   };
 
   memory@9 {
