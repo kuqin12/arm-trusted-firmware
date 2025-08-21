@@ -17,6 +17,7 @@
 	.globl	plat_crash_console_putc
 	.globl	plat_crash_console_flush
 	.globl  plat_secondary_cold_boot_setup
+	.globl  plat_secondary_cold_boot_setup_wfi
 	.globl  plat_get_my_entrypoint
 	.globl  plat_is_my_cpu_primary
 
@@ -67,6 +68,12 @@ func plat_secondary_cold_boot_setup
 	lsl	x0, x0, #PLAT_QEMU_HOLD_ENTRY_SHIFT
 	mov_imm	x2, PLAT_QEMU_HOLD_BASE
 
+	/* first check to see if we are about to be suspended */
+	ldr	x1, [x2, x0]
+	cmp	x1, #PLAT_QEMU_HOLD_STATE_SUSPEND
+	/* if so, use wfi for suspension */
+	beq	2f
+
 	/* Wait until we have a go */
 poll_mailbox:
 	ldr	x1, [x2, x0]
@@ -83,11 +90,30 @@ poll_mailbox:
 1:
 	wfe
 	b	poll_mailbox
+2:
+	wfi
+	/* if we wake up from wfi, the suspend is over, clear and poll the mailbox */
+	b	poll_mailbox
 endfunc plat_secondary_cold_boot_setup
 
 func plat_get_my_entrypoint
-	/* TODO support warm boot */
+	/* Preserve the link register */
+	mov	x1, x30
+	/* Write 0 to the mailbox upon the first call */
+	mov_imm	x0, PLAT_QEMU_TRUSTED_MAILBOX_BASE
+	str	xzr, [x0]
+	bl	plat_is_my_cpu_primary
+	cbz	w0, do_sec_entrypoint
+	/* This is the primary entrypoint */
 	mov	x0, #0
+	b	done_entrypoint
+do_sec_entrypoint:
+	mov_imm	x0, PLAT_QEMU_TRUSTED_MAILBOX_BASE
+	ldr	x0, [x0]
+	// hot loop until the mailbox is populated by the primary core
+	cbz	x0, do_sec_entrypoint
+done_entrypoint:
+	mov	x30, x1
 	ret
 endfunc plat_get_my_entrypoint
 
