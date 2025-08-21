@@ -86,8 +86,23 @@ poll_mailbox:
 endfunc plat_secondary_cold_boot_setup
 
 func plat_get_my_entrypoint
-	/* TODO support warm boot */
+	/* Preserve the link register */
+	mov	x1, x30
+	/* Write 0 to the mailbox upon the first call */
+	mov_imm	x0, PLAT_QEMU_TRUSTED_MAILBOX_BASE
+	str	xzr, [x0]
+	bl	plat_is_my_cpu_primary
+	cbz	w0, do_sec_entrypoint
+	/* This is the primary entrypoint */
 	mov	x0, #0
+	b	done_entrypoint
+do_sec_entrypoint:
+	mov_imm	x0, PLAT_QEMU_TRUSTED_MAILBOX_BASE
+	ldr	x0, [x0]
+	// hot loop until the mailbox is populated by the primary core
+	cbz	x0, do_sec_entrypoint
+done_entrypoint:
+	mov	x30, x1
 	ret
 endfunc plat_get_my_entrypoint
 
