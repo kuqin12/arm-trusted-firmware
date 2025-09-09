@@ -177,8 +177,7 @@ void qemu_pwr_domain_suspend(const psci_power_state_t *target_state)
 	// This seems odd, but at this point, the core should be running already
 	// Thus setting the mailbox for itself will only take effect when the next event
 	// arrived and the core is ready to process it (at poll mailbox loop).
-	hold_base[pos] = PLAT_QEMU_HOLD_STATE_GO;
-	sev();
+	hold_base[pos] = PLAT_QEMU_HOLD_STATE_SUSPEND;
 }
 
 /*******************************************************************************

@@ -17,6 +17,7 @@
 	.globl	plat_crash_console_putc
 	.globl	plat_crash_console_flush
 	.globl  plat_secondary_cold_boot_setup
+	.globl  plat_secondary_cold_boot_setup_wfi
 	.globl  plat_get_my_entrypoint
 	.globl  plat_is_my_cpu_primary
 
@@ -67,6 +68,12 @@ func plat_secondary_cold_boot_setup
 	lsl	x0, x0, #PLAT_QEMU_HOLD_ENTRY_SHIFT
 	mov_imm	x2, PLAT_QEMU_HOLD_BASE
 
+	/* first check to see if we are about to be suspended */
+	ldr	x1, [x2, x0]
+	cmp	x1, #PLAT_QEMU_HOLD_STATE_SUSPEND
+	/* if so, use wfi for suspension */
+	beq	2f
+
 	/* Wait until we have a go */
 poll_mailbox:
 	ldr	x1, [x2, x0]
@@ -82,6 +89,10 @@ poll_mailbox:
 	br	x1
 1:
 	wfe
+	b	poll_mailbox
+2:
+	wfi
+	/* if we wake up from wfi, the suspend is over, clear and poll the mailbox */
 	b	poll_mailbox
 endfunc plat_secondary_cold_boot_setup
 
