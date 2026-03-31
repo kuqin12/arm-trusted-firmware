@@ -170,7 +170,14 @@ qemu_pwr_domain_pwr_down_wfi(const psci_power_state_t *target_state)
  ******************************************************************************/
 void qemu_pwr_domain_suspend(const psci_power_state_t *target_state)
 {
-	assert(false);
+	// Set up the mailbox to prepare for the interrupt coming back up
+	unsigned pos = plat_my_core_pos();
+	uint64_t *hold_base = (uint64_t *)PLAT_QEMU_HOLD_BASE;
+
+	// This seems odd, but at this point, the core should be running already
+	// Thus setting the mailbox for itself will only take effect when the next event
+	// arrived and the core is ready to process it (at poll mailbox loop).
+	hold_base[pos] = PLAT_QEMU_HOLD_STATE_SUSPEND;
 }
 
 /*******************************************************************************
@@ -193,7 +200,7 @@ void qemu_pwr_domain_on_finish(const psci_power_state_t *target_state)
  ******************************************************************************/
 void qemu_pwr_domain_suspend_finish(const psci_power_state_t *target_state)
 {
-	assert(false);
+	// Do nothing
 }
 
 /*******************************************************************************
@@ -207,6 +214,11 @@ static void __dead2 qemu_system_off(void)
 
 static void __dead2 qemu_system_reset(void)
 {
+	uintptr_t *mailbox = (uintptr_t *)PLAT_QEMU_TRUSTED_MAILBOX_BASE;
+
+	// Save us from the next boot up
+	*mailbox = 0;
+
 	mmio_write_32(SBSA_SECURE_EC_OFFSET, SBSA_SECURE_EC_CMD_REBOOT);
 	panic();
 }
